@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subscription Details</title>
+</head>
+
+<body>
+<div id="subscription-details"></div>
+<script>
+   fetch('/subscription')
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById('subscription-details');
+            const date = new Date(data.current_period_end * 1000);
+            const formattedDate = date.toLocaleDateString('en-IN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            console.log(formattedDate);
+            let currency = data.plan.currency === "usd" ? "$" : data.plan.currency;
+            container.innerHTML = `<p>Billing date: ${formattedDate} \n <p>Next payment:${data.plan.amount / 100} ${currency}</p>`
+
+        })
+        .catch(error => {
+            console.error('Error fetching subscription:', error);
+        });
+
+</script>
+</body>
+
+</html>
